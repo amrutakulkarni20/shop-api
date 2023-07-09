@@ -1,12 +1,12 @@
 package com.shop.api.util;
 
+import com.shop.api.model.TokenRequestBody;
+import com.shop.api.model.TokenResponseBody;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class ApiClient
@@ -23,33 +23,22 @@ public class ApiClient
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-API-KEY", apiKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
-        Map<String, String> requestBody = createRequestBody();
-        HttpEntity<Map<String, String>> entity = new HttpEntity<>(requestBody, headers);
-        ResponseEntity<Map> response = restTemplate.postForEntity(apiUrl, entity, Map.class);
-        String accessToken = (String) response.getBody().get("access_token");
-        return accessToken;
+        TokenRequestBody requestBody = createRequestBody();
+        HttpEntity<TokenRequestBody> entity = new HttpEntity<>(requestBody, headers);
+        ResponseEntity<TokenResponseBody> response = restTemplate.postForEntity(apiUrl, entity, TokenResponseBody.class);
+        if (response.getBody() != null && response.getBody().getAccess_token() != null) {
+            return response.getBody().getAccess_token();
+        } else {
+            return new Exception("Access token not found").getMessage();
+        }
     }
 
-//        String accessToken = (String) response.getBody().get("access_token");
-//
-//        HttpHeaders apiHeaders = new HttpHeaders();
-//        apiHeaders.setBearerAuth(accessToken);
-//
-//        HttpEntity<String> apiEntity = new HttpEntity<>(apiHeaders);
-//
-//// Make API requests with the bearer token
-//        ResponseEntity<String> apiResponse = restTemplate.exchange("<your_api_url>", HttpMethod.POST, apiEntity, String.class);
-
-// Handle the API response
-// ...
-
-
-    private Map<String, String> createRequestBody() {
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("client_id", "bewerber");
-        requestBody.put("client_secret", "hj52Ws4kF");
-        requestBody.put("grant_type", "client_credentials");
-        return requestBody;
+    private TokenRequestBody createRequestBody() {
+        TokenRequestBody request = new TokenRequestBody();
+        request.setClient_id("bewerber");
+        request.setClient_secret("hj52Ws4kF");
+        request.setGrant_type("client_credentials");
+        return request;
 
     }
 
