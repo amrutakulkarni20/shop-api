@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface ShopService {
 
-    List<ShopModel> getShops() throws JsonProcessingException;
+    List<ShopModel> createShops() throws JsonProcessingException;
 
-    List<ShopModel> getShopsFromDB();
+    List<ShopModel> getShops();
+
+    ShopModel getShop(String id);
 }
