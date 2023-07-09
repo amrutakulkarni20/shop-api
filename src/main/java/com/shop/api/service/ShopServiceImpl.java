@@ -6,9 +6,11 @@ import com.shop.api.entity.ShopEntity;
 import com.shop.api.model.ResponseObject;
 import com.shop.api.model.ShopModel;
 import com.shop.api.repository.ShopRepository;
+import com.shop.api.security.TokenManager;
 import com.shop.api.util.ApiClient;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -35,6 +37,9 @@ public class ShopServiceImpl implements ShopService {
 
     private ApiClient client;
 
+    @Autowired
+    private TokenManager tokenManager;
+
     public ShopServiceImpl(ModelMapper modelMapper, ShopRepository shopRepository, ApiClient client) {
         this.modelMapper = modelMapper;
         this.shopRepository = shopRepository;
@@ -56,7 +61,7 @@ public class ShopServiceImpl implements ShopService {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders apiHeaders = new HttpHeaders();
         apiHeaders.set("X-API-KEY", apiKey);
-        apiHeaders.setBearerAuth(client.getAccountToken());
+        apiHeaders.setBearerAuth(tokenManager.getToken());
         HttpEntity<String> apiEntity = new HttpEntity<>(apiHeaders);
         ResponseEntity<String> apiResponse = restTemplate.exchange(apiUrl, HttpMethod.GET, apiEntity, String.class); // mock
         return apiResponse.getBody();
