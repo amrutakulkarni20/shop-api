@@ -1,24 +1,16 @@
 package com.shop.api.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shop.api.entity.ShopEntity;
 import com.shop.api.model.ResponseObject;
 import com.shop.api.model.ShopModel;
 import com.shop.api.repository.ShopRepository;
 import com.shop.api.security.TokenManager;
-import com.shop.api.util.ApiClient;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,47 +21,37 @@ public class ShopServiceImpl implements ShopService {
     private String apiKey;
 
     @Value("${shop.api.url}")
-    private String apiUrl;
+    private String shopApiUrl;
 
     private ModelMapper modelMapper;
 
     private ShopRepository shopRepository;
 
-    private ApiClient client;
-
-    @Autowired
     private TokenManager tokenManager;
 
-    public ShopServiceImpl(ModelMapper modelMapper, ShopRepository shopRepository, ApiClient client) {
+    private ShopApiClient shopApiClient;
+
+    public ShopServiceImpl(ModelMapper modelMapper, ShopRepository shopRepository, TokenManager tokenManager,ShopApiClient shopApiClient) {
         this.modelMapper = modelMapper;
         this.shopRepository = shopRepository;
-        this.client = client;
+        this.tokenManager = tokenManager;
+        this.shopApiClient = shopApiClient;
     }
 
     @Override
-    public List<ShopModel> createShops() throws JsonProcessingException {
-        String response = getShopList();
-        ObjectMapper objectMapper = new ObjectMapper();
-        ResponseObject responseObject = objectMapper.readValue(response, ResponseObject.class);
-        TypeToken<List<ShopModel>> typeToken = new TypeToken<>() {};
-        List<ShopModel> shopObj = modelMapper.map(responseObject.getItems(), typeToken.getType());
-        saveShops(shopObj);
-        return shopObj;
+    public void createShops() {
+        List<ShopEntity> shopFromApi = getShopsFromApi();
+            shopRepository.saveAll(shopFromApi);
     }
 
-    private String getShopList() {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders apiHeaders = new HttpHeaders();
-        apiHeaders.set("X-API-KEY", apiKey);
-        apiHeaders.setBearerAuth(tokenManager.getToken());
-        HttpEntity<String> apiEntity = new HttpEntity<>(apiHeaders);
-        ResponseEntity<String> apiResponse = restTemplate.exchange(apiUrl, HttpMethod.GET, apiEntity, String.class); // mock
-        return apiResponse.getBody();
-    }
-    private void saveShops(List<ShopModel> shopObj) {
+    private List<ShopEntity> getShopsFromApi() {
+        Optional<ResponseObject> shopFromApi = Optional.of(shopApiClient.getAllShops());
         TypeToken<List<ShopEntity>> typeToken = new TypeToken<>() {};
-        List<ShopEntity> shopList = modelMapper.map(shopObj, typeToken.getType());
-        shopRepository.saveAll(shopList);
+        List<ShopEntity> shopList = new ArrayList<>();
+        if(shopFromApi.isPresent()){
+            shopList =  modelMapper.map(shopFromApi.get().getItems(), typeToken.getType());
+        }
+        return shopList;
     }
 
     @Override

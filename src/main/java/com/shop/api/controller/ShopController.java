@@ -1,16 +1,13 @@
 package com.shop.api.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.shop.api.model.ShopModel;
 import com.shop.api.service.ShopService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController()
+@RestController
 public class ShopController {
 
     private ShopService shopService;
@@ -20,8 +17,9 @@ public class ShopController {
     }
 
     @PostMapping ("/shops")
-    public List<ShopModel> createShops() throws JsonProcessingException {
-        return shopService.createShops();
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createShops() {
+         shopService.createShops();
     }
 
     @GetMapping ("/shopList")
@@ -33,4 +31,8 @@ public class ShopController {
     public ShopModel getShop(@PathVariable("id") String id){
         return shopService.getShop(id);
     }
+
+    //update
+
+    //delete
 }
