@@ -18,7 +18,7 @@ public class ApiClient
     private String apiUrl;
 
 
-    public String getAccountToken() {
+    public TokenResponseBody getAccountToken() {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-API-KEY", apiKey);
@@ -27,9 +27,9 @@ public class ApiClient
         HttpEntity<TokenRequestBody> entity = new HttpEntity<>(requestBody, headers);
         ResponseEntity<TokenResponseBody> response = restTemplate.postForEntity(apiUrl, entity, TokenResponseBody.class);
         if (response.getBody() != null && response.getBody().getAccess_token() != null) {
-            return response.getBody().getAccess_token();
+            return response.getBody();
         } else {
-            return new Exception("Access token not found").getMessage();
+            throw new RuntimeException("Access token not found");
         }
     }
 
