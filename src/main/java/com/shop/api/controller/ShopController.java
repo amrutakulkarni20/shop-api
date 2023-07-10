@@ -2,6 +2,7 @@ package com.shop.api.controller;
 
 import com.shop.api.model.ShopModel;
 import com.shop.api.service.ShopService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +41,7 @@ public class ShopController {
 
     @PutMapping ("/shop")
     @ResponseStatus(HttpStatus.CREATED)
-    public void updateShop(@RequestBody ShopModel shopModel){
+    public void updateShop(@Valid @RequestBody ShopModel shopModel){
         shopService.updateShop(shopModel);
     }
 

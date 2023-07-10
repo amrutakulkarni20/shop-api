@@ -1,11 +1,14 @@
 package com.shop.api.model;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 public class ShopModel {
 
     public ShopModel(){}
 
+    @NotNull(message = "Id cannot be left blank.")
     private String id;
 
     private String name;
