@@ -14,6 +14,5 @@ import lombok.ToString;
 public class Category {
 
     private String id;
-
     private String name;
 }
