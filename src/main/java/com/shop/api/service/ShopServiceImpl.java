@@ -1,17 +1,16 @@
 package com.shop.api.service;
 
 import com.shop.api.entity.ShopEntity;
+import com.shop.api.exception.InvalidInputDataException;
 import com.shop.api.model.ResponseObject;
 import com.shop.api.model.ShopModel;
 import com.shop.api.repository.ShopRepository;
-import com.shop.api.security.TokenManager;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -27,14 +26,11 @@ public class ShopServiceImpl implements ShopService {
 
     private ShopRepository shopRepository;
 
-    private TokenManager tokenManager;
-
     private ShopApiClient shopApiClient;
 
-    public ShopServiceImpl(ModelMapper modelMapper, ShopRepository shopRepository, TokenManager tokenManager,ShopApiClient shopApiClient) {
+    public ShopServiceImpl(ModelMapper modelMapper, ShopRepository shopRepository, ShopApiClient shopApiClient) {
         this.modelMapper = modelMapper;
         this.shopRepository = shopRepository;
-        this.tokenManager = tokenManager;
         this.shopApiClient = shopApiClient;
     }
 
@@ -47,11 +43,7 @@ public class ShopServiceImpl implements ShopService {
     private List<ShopEntity> getShopsFromApi() {
         Optional<ResponseObject> shopFromApi = Optional.of(shopApiClient.getAllShops());
         TypeToken<List<ShopEntity>> typeToken = new TypeToken<>() {};
-        List<ShopEntity> shopList = new ArrayList<>();
-        if(shopFromApi.isPresent()){
-            shopList =  modelMapper.map(shopFromApi.get().getItems(), typeToken.getType());
-        }
-        return shopList;
+        return modelMapper.map(shopFromApi.get().getItems(), typeToken.getType());
     }
 
     @Override
@@ -63,8 +55,32 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public ShopModel getShop(String id) {
-        Optional<ShopEntity> shopEntity = Optional.of(shopRepository.findById(id).orElseThrow());
-        return modelMapper.map(shopEntity.get(),ShopModel.class);
+        Optional<ShopEntity> shopEntityOptional = shopRepository.findById(id);
+        if (shopEntityOptional.isPresent()) {
+            ShopEntity shopEntity = shopEntityOptional.get();
+            return modelMapper.map(shopEntity, ShopModel.class);
+        }
+        throw new InvalidInputDataException("Shop not found with id: " + id);
+    }
 
+    @Override
+    public void updateShop(ShopModel shopModel) {
+        ShopModel shop = getShop(shopModel.getId());
+        if(Objects.nonNull(shop)){
+            ShopEntity shopEntity = modelMapper.map(shopModel,ShopEntity.class);
+            shopRepository.save(shopEntity);
+        }else{
+            throw new InvalidInputDataException("Invalid input request");
+        }
+    }
+
+    @Override
+    public void deleteShop(String id) {
+        ShopModel shop = getShop(id);
+        if(Objects.nonNull(shop)){
+            shopRepository.deleteById(id);
+        }else{
+            throw new InvalidInputDataException("Invalid input request");
+        }
     }
 }

@@ -3,7 +3,6 @@ import com.shop.api.model.TokenResponseBody;
 import com.shop.api.util.ApiClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 

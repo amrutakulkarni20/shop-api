@@ -11,4 +11,7 @@ public interface ShopService {
 
     ShopModel getShop(String id);
 
+    void updateShop(ShopModel shopModel);
+
+    void deleteShop(String id);
 }

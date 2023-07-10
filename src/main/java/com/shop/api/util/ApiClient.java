@@ -17,6 +17,15 @@ public class ApiClient
     @Value("${token.api.url}")
     private String apiUrl;
 
+    @Value("${client.id}")
+    private String clientId;
+
+    @Value("${client.secret}")
+    private String clientSecret;
+
+    @Value("${grant.type}")
+    private String grantType;
+
 
     public TokenResponseBody getAccountToken() {
         RestTemplate restTemplate = new RestTemplate();
@@ -35,9 +44,9 @@ public class ApiClient
 
     private TokenRequestBody createRequestBody() {
         TokenRequestBody request = new TokenRequestBody();
-        request.setClient_id("bewerber");
-        request.setClient_secret("hj52Ws4kF");
-        request.setGrant_type("client_credentials");
+        request.setClient_id(clientId);
+        request.setClient_secret(clientSecret);
+        request.setGrant_type(grantType);
         return request;
 
     }

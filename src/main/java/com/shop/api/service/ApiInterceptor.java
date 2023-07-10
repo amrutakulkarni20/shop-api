@@ -20,6 +20,8 @@ public class ApiInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate requestTemplate) {
+        Class<?> feignClientClass = requestTemplate.feignTarget().type();
+        String feignClientName = feignClientClass.getSimpleName();
         requestTemplate.header("Authorization","bearer "+tokenManager.getToken());
         requestTemplate.header("X-API-KEY",apiKey);
     }

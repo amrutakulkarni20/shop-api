@@ -1,7 +1,10 @@
 package com.shop.api.model;
 
-import lombok.*;
-
+import lombok.Getter;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import java.util.List;
 @Getter
 @Setter

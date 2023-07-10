@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Component
-@FeignClient(name="shopApiClient", url = "${base.url}")
+@FeignClient(name="shopApiClient", url = "${base.url}" , configuration = ApiInterceptor.class)
 public interface ShopApiClient {
 
     @GetMapping("/v3/cashback/shops")
