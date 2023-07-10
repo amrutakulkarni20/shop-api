@@ -1,7 +1,9 @@
 package com.shop.api.security;
+import com.shop.api.model.TokenRequestBody;
 import com.shop.api.model.TokenResponseBody;
-import com.shop.api.util.ApiClient;
+import com.shop.api.service.AccessTokenClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -9,8 +11,17 @@ import java.time.LocalDateTime;
 @Component
 public class TokenManager {
 
+    @Value("${client.id}")
+    private String clientId;
+
+    @Value("${client.secret}")
+    private String clientSecret;
+
+    @Value("${grant.type}")
+    private String grantType;
+
     @Autowired
-    private ApiClient apiClient;
+    private AccessTokenClient accessTokenClient;
 
         private TokenInfo tokenInfo;
 
@@ -29,7 +40,7 @@ public class TokenManager {
         private void refreshToken() {
             // Call your RestTemplate to obtain the new token
             // Assuming the response includes the new token and its expiration time
-            TokenResponseBody response = apiClient.getAccountToken();
+            TokenResponseBody response = accessTokenClient.getAccessToken(createRequestBody());
 
             if (response != null) {
                 String token = response.getAccess_token();
@@ -38,6 +49,15 @@ public class TokenManager {
                 tokenInfo = new TokenInfo(token, expiresAt1);
             }
         }
+
+    private TokenRequestBody createRequestBody() {
+        TokenRequestBody request = new TokenRequestBody();
+        request.setClient_id(clientId);
+        request.setClient_secret(clientSecret);
+        request.setGrant_type(grantType);
+        return request;
+
+    }
 
         private static class TokenInfo {
             private String token;

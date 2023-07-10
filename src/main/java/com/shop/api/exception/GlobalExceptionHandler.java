@@ -14,12 +14,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InvalidInputDataException.class)
     protected ResponseEntity<Object> invalidInputRequestHandler(InvalidInputDataException inputDataException){
-        final ErrorDetails errorDetails = new ErrorDetails("Invalid input request",inputDataException.getMessage());
+        final ErrorDetails errorDetails = new ErrorDetails(ErrorCode.INVALID_REQUEST,inputDataException.getMessage());
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        final ErrorDetails errorDetails = new ErrorDetails("Input request Validation Failed",
+        final ErrorDetails errorDetails = new ErrorDetails(ErrorCode.INVALID_REQUEST,
                 exception.getBindingResult().toString());
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }

@@ -9,9 +9,9 @@ public interface ShopService {
 
     List<ShopModel> getShops();
 
-    ShopModel getShop(String id);
+    ShopModel getShopById(String id);
 
     void updateShop(ShopModel shopModel);
 
-    void deleteShop(String id);
+    void deleteShopById(String id);
 }

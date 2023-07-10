@@ -56,7 +56,7 @@ class ShopControllerTest {
 
     @Test
     void getsAllShopsAndVerifiesStatusCode() {
-        ResponseEntity<List<ShopModel>> shops = testRestTemplate.exchange(createURLForGetRequest("/shopList", host, testPort),
+        ResponseEntity<List<ShopModel>> shops = testRestTemplate.exchange(createURLForGetRequest("/shops", host, testPort),
                 HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
         assertNotNull(shops);
         assertSame(HttpStatus.OK, shops.getStatusCode());
@@ -77,7 +77,7 @@ class ShopControllerTest {
         ResponseEntity<ShopModel> updateShopsApiResponse = testRestTemplate.exchange(createURLForGetRequest("/shop", host, testPort),
                 HttpMethod.PUT, updateShopRequest, new ParameterizedTypeReference<>() {});
         assertNotNull(updateShopsApiResponse);
-        assertSame(HttpStatus.CREATED, updateShopsApiResponse.getStatusCode());
+        assertSame(HttpStatus.OK, updateShopsApiResponse.getStatusCode());
     }
 
     @Test

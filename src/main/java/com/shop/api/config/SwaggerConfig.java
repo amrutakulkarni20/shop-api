@@ -16,8 +16,8 @@ public class SwaggerConfig {
     private static final String PACKAGE_NAME = "com.shop.api.controller";
     ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Booking Service")
-                .description("\"This project is a RESTful web service developed as part of an assignment of MehrWerk. It allows users to create and retrieve shops through a simple and intuitive API.\"")
+                .title("Shop-api Service")
+                .description("\"This project is a REST API developed to create, retrieve, update and delete shops.\"")
                 .contact(new Contact("Amruta Kulkarni", "https://www.linkedin.com/in/amruta-kulkarni-031bb3160/", "amruta.kulkarni.20121991@gmail.com"))
                 .build();
     }

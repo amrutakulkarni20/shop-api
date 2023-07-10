@@ -29,24 +29,23 @@ public class ShopController {
          shopService.createShops();
     }
 
-    @GetMapping ("/shopList")
+    @GetMapping ("/shops")
     public List<ShopModel> getShops(){
         return shopService.getShops();
     }
 
     @GetMapping ("/shop/{id}")
-    public ShopModel getShop(@PathVariable("id") String id){
-        return shopService.getShop(id);
+    public ShopModel getShopById(@PathVariable("id") String id){
+        return shopService.getShopById(id);
     }
 
     @PutMapping ("/shop")
-    @ResponseStatus(HttpStatus.CREATED)
     public void updateShop(@Valid @RequestBody ShopModel shopModel){
         shopService.updateShop(shopModel);
     }
 
     @DeleteMapping ("/shop/{id}")
-    public void deleteShop(@PathVariable("id") String id){
-         shopService.deleteShop(id);
+    public void deleteShopById(@PathVariable("id") String id){
+         shopService.deleteShopById(id);
     }
 }

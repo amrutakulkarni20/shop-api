@@ -9,7 +9,6 @@ import lombok.*;
 @ToString
 public class ErrorDetails {
 
+    private ErrorCode code;
     private String message;
-
-    private String details;
 }
