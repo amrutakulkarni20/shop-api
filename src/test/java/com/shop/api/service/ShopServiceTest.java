@@ -2,6 +2,7 @@ package com.shop.api.service;
 
 import com.shop.api.entity.CategoriesEntity;
 import com.shop.api.entity.ShopEntity;
+import com.shop.api.exception.InvalidInputDataException;
 import com.shop.api.model.Category;
 import com.shop.api.model.Item;
 import com.shop.api.model.ResponseObject;
@@ -15,26 +16,19 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ShopServiceTest {
-
-    @Value("${api.key}")
-    private String apiKey;
-
-    @Value("${shop.api.url}")
-    private String apiUrl;
 
     @Mock
     private ShopRepository shopRepository;
@@ -44,9 +38,6 @@ public class ShopServiceTest {
 
     @Mock
     private ShopApiClient shopApiClient;
-
-    @Mock
-    private ResponseEntity<String> responseEntity;
 
     @InjectMocks
     private ShopServiceImpl shopService;
@@ -94,6 +85,13 @@ public class ShopServiceTest {
         assertEquals(shopsModelList.get(0), shop);
     }
 
+    @Test(expected = InvalidInputDataException.class)
+    public void test_InvalidShopById_checksIdFromResponse() throws InvalidInputDataException{
+        final String id = "5484";
+        when(shopRepository.findById(id)).thenThrow(InvalidInputDataException.class);
+        shopService.getShopById(id);
+    }
+
     @Test
     public void test_updateShop_checkResponse(){
         final String id = "548446d66f9c421d61bb825d";
@@ -111,6 +109,15 @@ public class ShopServiceTest {
 
     }
 
+    @Test(expected = InvalidInputDataException.class)
+    public void test_UpdateShopById_WithInvalidInput_checksIdFromResponse() throws InvalidInputDataException{
+        final String id = "5484";
+        List<ShopModel> shopsModelList = createShopResponse(ShopModel.class);
+        shopsModelList.get(0).setId(id);
+        when(shopRepository.findById(id)).thenThrow(InvalidInputDataException.class);
+        shopService.updateShop(shopsModelList.get(0));
+    }
+
     @Test
     public void test_deleteShopById_checkResponse(){
         final String id = "548446d66f9c421d61bb825d";
@@ -122,7 +129,21 @@ public class ShopServiceTest {
         ArgumentCaptor<String> idArgumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(shopRepository, times(1)).deleteById(idArgumentCaptor.capture());
         assertEquals(id, idArgumentCaptor.getValue());
+    }
 
+    @Test(expected = InvalidInputDataException.class)
+    public void test_deleteShopsById_withInvalidId_VerifiesResponse() throws InvalidInputDataException{
+        final String id = "5484";
+        when(shopRepository.findById(id)).thenThrow(InvalidInputDataException.class);
+        shopService.deleteShopById(id);
+    }
+
+    @Test
+    public void test_getAllShops_When_ShopsAreEmpty(){
+        List<ShopEntity> shopsEntityList = new ArrayList<>();
+        when(shopRepository.findAll()).thenReturn(shopsEntityList);
+        List<ShopModel>  shops = shopService.getShops();
+        assertNull(shops);
     }
 
     private <T> List<T> createShopResponse(Class<T> clazz) {

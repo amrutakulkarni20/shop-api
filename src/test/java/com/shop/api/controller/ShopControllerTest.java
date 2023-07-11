@@ -1,6 +1,9 @@
 package com.shop.api.controller;
 
 import com.shop.api.ShopServiceApiApplication;
+import com.shop.api.exception.ErrorCode;
+import com.shop.api.exception.ErrorDetails;
+import com.shop.api.exception.InvalidInputDataException;
 import com.shop.api.model.Category;
 import com.shop.api.model.ShopModel;
 import org.junit.jupiter.api.BeforeEach;
@@ -72,6 +75,16 @@ class ShopControllerTest {
     }
 
     @Test
+    void test_getsShopById_withInvalidId_AndVerifiesResponse() throws InvalidInputDataException {
+        final String id = "548446";
+        ResponseEntity<ErrorDetails> errorResponse = testRestTemplate.exchange(createURLForGetRequest("/shop/" + id, host, testPort),
+                HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
+        assertEquals(HttpStatus.BAD_REQUEST, errorResponse.getStatusCode());
+        assertEquals(ErrorCode.INVALID_REQUEST, errorResponse.getBody().getCode());
+        assertEquals("Shop not found with id: "+id, errorResponse.getBody().getMessage());
+    }
+
+    @Test
     void updateShopAndVerifiesStatusCode() {
         ResponseEntity<ShopModel> updateShopRequest = createShopRequest();
         ResponseEntity<ShopModel> updateShopsApiResponse = testRestTemplate.exchange(createURLForGetRequest("/shop", host, testPort),
@@ -81,12 +94,36 @@ class ShopControllerTest {
     }
 
     @Test
+    void test_updateShop_withInvalidData_AndVerifiesResponse() throws InvalidInputDataException {
+        final String id = "548446";
+        ResponseEntity<ShopModel> updateShopRequest = createShopRequest();
+        updateShopRequest.getBody().setId(id);
+        ResponseEntity<ErrorDetails> errorResponse = testRestTemplate.exchange(createURLForGetRequest("/shop/" + id, host, testPort),
+                HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
+        assertEquals(HttpStatus.BAD_REQUEST, errorResponse.getStatusCode());
+        assertEquals(ErrorCode.INVALID_REQUEST, errorResponse.getBody().getCode());
+        assertEquals("Shop not found with id: "+id, errorResponse.getBody().getMessage());
+
+
+    }
+
+    @Test
     void deleteShopAndVerifiesStatus() {
         final String id = "548446d66f9c421d61bb825d";
         ResponseEntity<ShopModel> deleteShopResponse = testRestTemplate.exchange(createURLForGetRequest("/shop/" + id, host, testPort),
                 HttpMethod.DELETE, null, new ParameterizedTypeReference<>() {});
         assertNotNull(deleteShopResponse);
         assertSame(HttpStatus.OK, deleteShopResponse.getStatusCode());
+    }
+
+    @Test
+    void test_deleteShopById_withInvalidId_AndVerifiesResponse() throws InvalidInputDataException {
+        final String id = "548446";
+        ResponseEntity<ErrorDetails> errorResponse = testRestTemplate.exchange(createURLForGetRequest("/shop/" + id, host, testPort),
+                HttpMethod.DELETE, null, new ParameterizedTypeReference<>() {});
+        assertEquals(HttpStatus.BAD_REQUEST, errorResponse.getStatusCode());
+        assertEquals(ErrorCode.INVALID_REQUEST, errorResponse.getBody().getCode());
+        assertEquals("Shop not found with id: "+id, errorResponse.getBody().getMessage());
     }
 
     private String createURLForGetRequest(final String uri, final String host,

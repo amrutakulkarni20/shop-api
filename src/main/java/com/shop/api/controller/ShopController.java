@@ -46,6 +46,6 @@ public class ShopController {
 
     @DeleteMapping ("/shop/{id}")
     public void deleteShopById(@PathVariable("id") String id){
-         shopService.deleteShopById(id);
+        shopService.deleteShopById(id);
     }
 }

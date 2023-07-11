@@ -13,7 +13,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 @Configuration
 public class SwaggerConfig {
 
-    private static final String PACKAGE_NAME = "com.shop.api.controller";
+    private static final String PACKAGE_NAME = "com.shop.api.controlle";
     ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("Shop-api Service")
