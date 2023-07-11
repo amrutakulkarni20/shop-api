@@ -61,8 +61,8 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public void updateShop(ShopModel shopModel) {
-        ShopModel shop = getShopById(shopModel.getId());
-        ShopEntity shopEntity = modelMapper.map(shop, ShopEntity.class);
+        getShopById(shopModel.getId());
+        ShopEntity shopEntity = modelMapper.map(shopModel, ShopEntity.class);
         shopRepository.save(shopEntity);
     }
 
