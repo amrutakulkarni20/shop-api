@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 @RestController
-public class ShopController {
+public class ShopController implements IShopController{
 
     private ShopService shopService;
 

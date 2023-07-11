@@ -1,6 +1,6 @@
 package com.shop.api.service;
 
-import com.shop.api.model.Headers;
+import com.shop.api.security.Headers;
 import com.shop.api.security.TokenManager;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

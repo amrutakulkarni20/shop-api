@@ -20,7 +20,7 @@ To run the spring boot project please execute the below command from the termina
 mvn spring-boot:run
 ```
 # Swagger Documentation 
-Once the application is ready to use and up and running kindly open the web browser and visit the URL : http://localhost:8080/swagger-ui.html. ( On the machine where this application is running )
+Once the application is ready to use and up and running kindly open the web browser and visit the URL : http://localhost:8080/swagger-ui/index.html#/  ( On the machine where this application is running )
 
 
 

@@ -7,7 +7,6 @@ import com.shop.api.model.ShopModel;
 import com.shop.api.repository.ShopRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,17 +15,13 @@ import java.util.Optional;
 @Service
 public class ShopServiceImpl implements ShopService {
 
-    @Value("${api.key}")
-    private String apiKey;
-
-    @Value("${shop.api.url}")
-    private String shopApiUrl;
-
     private ModelMapper modelMapper;
 
     private ShopRepository shopRepository;
 
     private ShopApiClient shopApiClient;
+
+    private static final String SHOP_NOT_FOUND_MESSAGE = "Shop not found with id: ";
 
     public ShopServiceImpl(ModelMapper modelMapper, ShopRepository shopRepository, ShopApiClient shopApiClient) {
         this.modelMapper = modelMapper;
@@ -46,33 +41,34 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public List<ShopModel> getShops() {
-        Optional<List<ShopEntity>> shops = Optional.of(shopRepository.findAll());
-        if (shops.isPresent()) {
+        List<ShopEntity> shops = shopRepository.findAll();
+        if (!shops.isEmpty()) {
             TypeToken<List<ShopModel>> typeToken = new TypeToken<>() {};
-            return modelMapper.map(shops.get(), typeToken.getType());
+            return modelMapper.map(shops, typeToken.getType());
         }
-        return new ArrayList<ShopModel>();
+        return new ArrayList<>();
     }
 
     @Override
     public ShopModel getShopById(String id) {
         Optional<ShopEntity> shop = shopRepository.findById(id);
-        shop.orElseThrow(()-> new InvalidInputDataException("Shop not found with id: " +id));
-        return modelMapper.map(shop.get(), ShopModel.class);
+        if(shop.isPresent()){
+            return modelMapper.map(shop.get(), ShopModel.class);
+        } else {
+            throw new InvalidInputDataException(SHOP_NOT_FOUND_MESSAGE +id);
+        }
     }
 
     @Override
     public void updateShop(ShopModel shopModel) {
-        Optional<ShopModel> shop = Optional.of(getShopById(shopModel.getId()));
-        shop.orElseThrow(()-> new InvalidInputDataException("Shop not found with id: " +shopModel.getId()));
-        ShopEntity shopEntity = modelMapper.map(shopModel, ShopEntity.class);
+        ShopModel shop = getShopById(shopModel.getId());
+        ShopEntity shopEntity = modelMapper.map(shop, ShopEntity.class);
         shopRepository.save(shopEntity);
     }
 
     @Override
     public void deleteShopById(String id) {
-        Optional<ShopModel> shop = Optional.of(getShopById(id));
-        shop.orElseThrow(()-> new InvalidInputDataException("Shop not found with id: " +id));
-        shopRepository.deleteById(id);
+        ShopModel shop = getShopById(id);
+        shopRepository.deleteById(shop.getId());
     }
 }

@@ -75,7 +75,7 @@ class ShopControllerTest {
     }
 
     @Test
-    void test_getsShopById_withInvalidId_AndVerifiesResponse() throws InvalidInputDataException {
+    void throwsInvalidRequestWhenInvalidShopIdPassedToGetShopById() throws InvalidInputDataException {
         final String id = "548446";
         ResponseEntity<ErrorDetails> errorResponse = testRestTemplate.exchange(createURLForGetRequest("/shop/" + id, host, testPort),
                 HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
@@ -85,7 +85,7 @@ class ShopControllerTest {
     }
 
     @Test
-    void updateShopAndVerifiesStatusCode() {
+    void updatesShopAndVerifiesStatusCode() {
         ResponseEntity<ShopModel> updateShopRequest = createShopRequest();
         ResponseEntity<ShopModel> updateShopsApiResponse = testRestTemplate.exchange(createURLForGetRequest("/shop", host, testPort),
                 HttpMethod.PUT, updateShopRequest, new ParameterizedTypeReference<>() {});
@@ -94,7 +94,7 @@ class ShopControllerTest {
     }
 
     @Test
-    void test_updateShop_withInvalidData_AndVerifiesResponse() throws InvalidInputDataException {
+    void throwsInvalidRequestWhenInvalidShopIdPassedToUpdateShop() throws InvalidInputDataException {
         final String id = "548446";
         ResponseEntity<ShopModel> updateShopRequest = createShopRequest();
         updateShopRequest.getBody().setId(id);
@@ -108,7 +108,7 @@ class ShopControllerTest {
     }
 
     @Test
-    void deleteShopAndVerifiesStatus() {
+    void deletesShopAndVerifiesStatus() {
         final String id = "548446d66f9c421d61bb825d";
         ResponseEntity<ShopModel> deleteShopResponse = testRestTemplate.exchange(createURLForGetRequest("/shop/" + id, host, testPort),
                 HttpMethod.DELETE, null, new ParameterizedTypeReference<>() {});
@@ -117,7 +117,7 @@ class ShopControllerTest {
     }
 
     @Test
-    void test_deleteShopById_withInvalidId_AndVerifiesResponse() throws InvalidInputDataException {
+    void throwsInvalidRequestWhenInvalidShopIdPassedToDeleteShopById() throws InvalidInputDataException {
         final String id = "548446";
         ResponseEntity<ErrorDetails> errorResponse = testRestTemplate.exchange(createURLForGetRequest("/shop/" + id, host, testPort),
                 HttpMethod.DELETE, null, new ParameterizedTypeReference<>() {});

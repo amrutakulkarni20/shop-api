@@ -1,4 +1,4 @@
-package com.shop.api.model;
+package com.shop.api.security;
 
 public enum Headers {
 

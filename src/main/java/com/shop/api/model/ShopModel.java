@@ -1,19 +1,27 @@
 package com.shop.api.model;
 
-import jakarta.validation.constraints.NotNull;
-
+import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 
 public class ShopModel {
 
     public ShopModel(){}
 
-    @NotNull(message = "Id cannot be left blank.")
+    public ShopModel(String id, String name, String description, List<Category> categories) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.categories = categories;
+    }
+
+    @NotBlank(message = "Id cannot be left blank.")
     private String id;
 
     private String name;
 
     private String description;
+
+    private List<Category> categories;
 
     public String getId() {
         return id;
@@ -47,12 +55,4 @@ public class ShopModel {
         this.categories = categories;
     }
 
-    public ShopModel(String id, String name, String description, List<Category> categories) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.categories = categories;
-    }
-
-    private List<Category> categories;
 }

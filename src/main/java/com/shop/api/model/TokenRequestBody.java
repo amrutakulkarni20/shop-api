@@ -1,5 +1,6 @@
 package com.shop.api.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.AllArgsConstructor;
@@ -13,10 +14,12 @@ import lombok.ToString;
 @ToString
 public class TokenRequestBody {
 
+    @JsonProperty("client_id")
+    private String clientId;
 
-    private String client_id;
+    @JsonProperty("client_secret")
+    private String clientSecret;
 
-    private String client_secret;
-
-    private String grant_type;
+    @JsonProperty("grant_type")
+    private String grantType;
 }

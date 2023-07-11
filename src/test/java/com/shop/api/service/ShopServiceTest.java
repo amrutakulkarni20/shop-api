@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
@@ -43,7 +44,7 @@ public class ShopServiceTest {
     private ShopServiceImpl shopService;
 
     @Test
-    public void createShopsAndVerifiesId() {
+    public void createsShopsAndVerifiesId() {
         Category category1 = new Category("5f211b9460fa5c01f522ce94", "öbel & Deko");
         Category category2 = new Category("5f211b9460fa5c01f522ce77", "Haus & Garten");
         List<Item> items = Arrays.asList(new Item("5487813f6f9c4203288b4743", 1, "abc", Arrays.asList(category1, category2)));
@@ -62,7 +63,7 @@ public class ShopServiceTest {
     }
 
     @Test
-    public void getAllShopsFromDatabaseAndVerifiesResponse(){
+    public void getsAllShopsFromDatabaseAndVerifiesResponse(){
         List<ShopEntity> shopsEntityList = createShopResponse(ShopEntity.class);
         when(shopRepository.findAll()).thenReturn(shopsEntityList);
         List<ShopModel> shopsModelList = createShopResponse(ShopModel.class);
@@ -74,7 +75,7 @@ public class ShopServiceTest {
     }
 
     @Test
-    public void test_getShopById_checksIdFromResponse(){
+    public void getsShopByIdAndVerifiesIdFromResponse(){
         final String id = "548446d66f9c421d61bb825d";
         List<ShopEntity> shopsEntityList = createShopResponse(ShopEntity.class);
         when(shopRepository.findById(id)).thenReturn(Optional.ofNullable(shopsEntityList.get(0)));
@@ -86,14 +87,14 @@ public class ShopServiceTest {
     }
 
     @Test(expected = InvalidInputDataException.class)
-    public void test_InvalidShopById_checksIdFromResponse() throws InvalidInputDataException{
+    public void throwsInvalidInputDataExceptionWhenInvalidShopIdPassedAndVerifiesResponse () throws InvalidInputDataException{
         final String id = "5484";
         when(shopRepository.findById(id)).thenThrow(InvalidInputDataException.class);
         shopService.getShopById(id);
     }
 
     @Test
-    public void test_updateShop_checkResponse(){
+    public void updatesShopSuccessfullyAndVerifiesResponse(){
         final String id = "548446d66f9c421d61bb825d";
         List<ShopEntity> shopsEntityList = createShopResponse(ShopEntity.class);
         when(shopRepository.findById(id)).thenReturn(Optional.ofNullable(shopsEntityList.get(0)));
@@ -110,7 +111,7 @@ public class ShopServiceTest {
     }
 
     @Test(expected = InvalidInputDataException.class)
-    public void test_UpdateShopById_WithInvalidInput_checksIdFromResponse() throws InvalidInputDataException{
+    public void throwsInvalidInputDataExceptionWhenInvalidShopIdPassedToUpdateShop() throws InvalidInputDataException{
         final String id = "5484";
         List<ShopModel> shopsModelList = createShopResponse(ShopModel.class);
         shopsModelList.get(0).setId(id);
@@ -119,7 +120,7 @@ public class ShopServiceTest {
     }
 
     @Test
-    public void test_deleteShopById_checkResponse(){
+    public void deletesShopSuccessfullyAndVerifiesResponse(){
         final String id = "548446d66f9c421d61bb825d";
         List<ShopEntity> shopsEntityList = createShopResponse(ShopEntity.class);
         when(shopRepository.findById(id)).thenReturn(Optional.ofNullable(shopsEntityList.get(0)));
@@ -132,18 +133,18 @@ public class ShopServiceTest {
     }
 
     @Test(expected = InvalidInputDataException.class)
-    public void test_deleteShopsById_withInvalidId_VerifiesResponse() throws InvalidInputDataException{
+    public void throwsInvalidInputDataExceptionWhenInvalidShopIdPassedToDeleteShop() throws InvalidInputDataException{
         final String id = "5484";
         when(shopRepository.findById(id)).thenThrow(InvalidInputDataException.class);
         shopService.deleteShopById(id);
     }
 
     @Test
-    public void test_getAllShops_When_ShopsAreEmpty(){
+    public void getsAllShopsWhenShopsAreNotAvailable(){
         List<ShopEntity> shopsEntityList = new ArrayList<>();
         when(shopRepository.findAll()).thenReturn(shopsEntityList);
         List<ShopModel>  shops = shopService.getShops();
-        assertNull(shops);
+        assertTrue(shops.isEmpty());
     }
 
     private <T> List<T> createShopResponse(Class<T> clazz) {

@@ -1,4 +1,4 @@
-package com.shop.api.service;
+package com.shop.api.security;
 
 import com.shop.api.model.TokenRequestBody;
 import com.shop.api.model.TokenResponseBody;

@@ -1,5 +1,6 @@
 package com.shop.api.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.AllArgsConstructor;
@@ -13,12 +14,16 @@ import lombok.ToString;
 @ToString
 public class TokenResponseBody {
 
-    private String access_token;
+    @JsonProperty("access_token")
+    private String accessToken;
 
-    private long expires_in;
+    @JsonProperty("expires_in")
+    private long expiresIn;
 
-    private String token_type;
+    @JsonProperty("token_type")
+    private String tokenType;
 
+    @JsonProperty("scope")
     private String [] scope;
 
 }

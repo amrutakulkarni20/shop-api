@@ -6,12 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 public class ResponseObject {
+
     private int currentPage;
     private int numberOfPages;
     private int numberOfResults;

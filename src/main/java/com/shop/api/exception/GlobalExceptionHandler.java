@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InvalidInputDataException.class)
-    protected ResponseEntity<Object> invalidInputRequestHandler(InvalidInputDataException inputDataException){
+    protected ResponseEntity<Object> handleInvalidInputDataException(InvalidInputDataException inputDataException){
         final ErrorDetails errorDetails = new ErrorDetails(ErrorCode.INVALID_REQUEST,inputDataException.getMessage());
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }

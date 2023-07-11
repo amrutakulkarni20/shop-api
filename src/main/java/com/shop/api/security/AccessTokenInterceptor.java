@@ -1,6 +1,5 @@
-package com.shop.api.service;
+package com.shop.api.security;
 
-import com.shop.api.model.Headers;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import org.springframework.beans.factory.annotation.Value;
