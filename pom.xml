@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.shop</groupId>
-	<artifactId>api</artifactId>
+	<artifactId>shop-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>shop service api</name>
 	<description>Demo project for shop api</description>
