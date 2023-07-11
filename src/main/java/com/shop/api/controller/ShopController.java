@@ -3,6 +3,8 @@ package com.shop.api.controller;
 import com.shop.api.model.ShopModel;
 import com.shop.api.service.ShopService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,8 +32,8 @@ public class ShopController implements IShopController{
     }
 
     @GetMapping ("/shops")
-    public List<ShopModel> getShops(){
-        return shopService.getShops();
+    public List<ShopModel> getShops(Pageable pageable){
+        return shopService.getShops(pageable);
     }
 
     @GetMapping ("/shop/{id}")

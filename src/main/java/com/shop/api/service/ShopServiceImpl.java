@@ -7,6 +7,8 @@ import com.shop.api.model.ShopModel;
 import com.shop.api.repository.ShopRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,11 +42,11 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public List<ShopModel> getShops() {
-        List<ShopEntity> shops = shopRepository.findAll();
-        if (!shops.isEmpty()) {
+    public List<ShopModel> getShops(Pageable pageable) {
+        Page<ShopEntity> shops = shopRepository.findAll(pageable);
+        if (null!=shops && !shops.isEmpty()) {
             TypeToken<List<ShopModel>> typeToken = new TypeToken<>() {};
-            return modelMapper.map(shops, typeToken.getType());
+            return modelMapper.map(shops.getContent(), typeToken.getType());
         }
         return new ArrayList<>();
     }

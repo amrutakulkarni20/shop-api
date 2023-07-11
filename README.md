@@ -1,9 +1,11 @@
 # Shop API Service
 
-This project is a RESTful web service developed as part of the assignment of MehrWerk. It provides functionality to store shops details and provides rest web services like get Shops, get Shops by Id, update Shop, Delete Shop.
+This project exposes REST API to store, get, update and delete the shop resource.
+
 # Prerequisites
 
 - JDK 17
+- Maven
 
 # Build
 
@@ -20,7 +22,8 @@ To run the spring boot project please execute the below command from the termina
 mvn spring-boot:run
 ```
 # Swagger Documentation 
-Once the application is ready to use and up and running kindly open the web browser and visit the URL : http://localhost:8080/swagger-ui/index.html#/  ( On the machine where this application is running )
+
+Please find the API documentation at URL : http://localhost:8080/swagger-ui/index.html#/
 
 
 

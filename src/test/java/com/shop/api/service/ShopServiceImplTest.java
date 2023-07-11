@@ -8,6 +8,8 @@ import com.shop.api.model.Item;
 import com.shop.api.model.ResponseObject;
 import com.shop.api.model.ShopModel;
 import com.shop.api.repository.ShopRepository;
+import com.shop.api.service.ShopApiClient;
+import com.shop.api.service.ShopServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -16,6 +18,10 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,12 +29,15 @@ import java.util.Optional;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ShopServiceTest {
+public class ShopServiceImplTest {
+
+    public ShopServiceImplTest(){}
 
     @Mock
     private ShopRepository shopRepository;
@@ -64,11 +73,12 @@ public class ShopServiceTest {
     @Test
     public void getsAllShopsFromDatabaseAndVerifiesResponse(){
         List<ShopEntity> shopsEntityList = createShopResponse(ShopEntity.class);
-        when(shopRepository.findAll()).thenReturn(shopsEntityList);
+        Page<ShopEntity> mockShopPage = new PageImpl<>(shopsEntityList);
+        when(shopRepository.findAll(any(Pageable.class))).thenReturn(mockShopPage);
         List<ShopModel> shopsModelList = createShopResponse(ShopModel.class);
         TypeToken<List<ShopModel>> typeToken = new TypeToken<>() {};
         when(modelMapper.map(shopsEntityList, typeToken.getType())).thenReturn(shopsModelList);
-        List<ShopModel>  shops = shopService.getShops();
+        List<ShopModel> shops = shopService.getShops(PageRequest.of(0, 10));
         assertNotNull(shops);
         assertEquals(shopsModelList, shops);
     }
@@ -138,11 +148,15 @@ public class ShopServiceTest {
         shopService.deleteShopById(id);
     }
 
+
     @Test
     public void getsAllShopsWhenShopsAreNotAvailable(){
         List<ShopEntity> shopsEntityList = new ArrayList<>();
-        when(shopRepository.findAll()).thenReturn(shopsEntityList);
-        List<ShopModel>  shops = shopService.getShops();
+        Page<ShopEntity> mockShopPage = new PageImpl<>(shopsEntityList);
+        when(shopRepository.findAll(any(Pageable.class))).thenReturn(mockShopPage);
+        TypeToken<Page<ShopModel>> typeToken = new TypeToken<>() {};
+        List<ShopModel> shopsModelList = new ArrayList<>();
+        List<ShopModel> shops = shopService.getShops(PageRequest.of(0, 10));
         assertTrue(shops.isEmpty());
     }
 

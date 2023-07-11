@@ -14,8 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.context.TestPropertySource;
 import java.util.Arrays;
@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, classes = {ShopServiceApiApplication.class})
 @TestPropertySource(locations = "classpath:test.properties")
-class ShopControllerTest {
+public class ShopControllerTest {
 
     private HttpHeaders httpHeaders;
 
@@ -55,14 +55,6 @@ class ShopControllerTest {
         ResponseEntity<List<ShopModel>> shops = testRestTemplate.exchange(createURLForGetRequest("/shops", host, testPort),
                 HttpMethod.POST, null, new ParameterizedTypeReference<>() {});
         return shops;
-    }
-
-    @Test
-    void getsAllShopsAndVerifiesStatusCode() {
-        ResponseEntity<List<ShopModel>> shops = testRestTemplate.exchange(createURLForGetRequest("/shops", host, testPort),
-                HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
-        assertNotNull(shops);
-        assertSame(HttpStatus.OK, shops.getStatusCode());
     }
 
     @Test

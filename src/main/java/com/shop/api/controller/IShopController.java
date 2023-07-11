@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
@@ -19,7 +21,7 @@ public interface IShopController {
 
     @Operation(summary = "Gets all Shops", description = "This API returns a list of Shops.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Shops returned successfully.")})
-    List<ShopModel> getShops();
+    List<ShopModel> getShops(Pageable pageable);
 
     @Operation(summary = "Gets Shop by Id", description = "This API returns Shop by Shop Id.")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Shop returned successfully.")})
